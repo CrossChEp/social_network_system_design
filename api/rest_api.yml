@@ -1,0 +1,1057 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: api социальный сети для курса по system design
+paths:
+
+  # Ручки связанные с постами
+  /api/v1/post/create:
+    post:
+      description: Создает пост
+
+      parameters:
+        - name: userID
+          in: cookie
+
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreatePostRequest'
+        required: true
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Непредвиденная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Неправильный формат входных данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /api/v1/posts/getByLocationIDs:
+    description: Получает список постов по списку id локаций
+
+    post:
+      parameters:
+        - name: userID
+          in: cookie
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetPostsByLocationIDsRequest'
+        required: true
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPostsByLocationIDsResponse'
+        '500':
+          description: Непредвиденная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Неправильный формат входных данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /api/v1/posts/getByUserID:
+    description: Получает посты по userID
+
+    post:
+      parameters:
+        - name: userID
+          in: cookie
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetPostsByUserIDRequest'
+        required: true
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPostsByUserIDResponse'
+        '500':
+          description: Непредвиденная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Неправильный формат входных данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Указанный пользователь не был найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /api/v1/post/update:
+    description: Обновляет контент поста
+
+    patch:
+      parameters:
+        - name: userID
+          in: cookie
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePostRequest'
+        required: true
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Непредвиденная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Неправильный формат входных данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Указанный пост не был найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '403':
+          description: У пользователя нет прав редактировать указанный пост
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /api/v1/post/delete:
+    description: Удаляет пост
+
+    delete:
+      parameters:
+        - name: userID
+          in: cookie
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostIDRequest'
+        required: true
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Непредвиденная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Неправильный формат входных данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Указанный пост не был найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '403':
+          description: У пользователя нет прав удалять указанный пост
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /api/v1/post/like:
+    description: Ставит лайк на пост
+
+    patch:
+      parameters:
+        - name: userID
+          in: cookie
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LikeRequest'
+        required: true
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Непредвиденная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Неправильный формат входных данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Указанный пост не был найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /api/v1/post/unlike:
+    description: Убирает лайк с поста
+
+    patch:
+      parameters:
+        - name: userID
+          in: cookie
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnlikeRequest'
+        required: true
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Непредвиденная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Неправильный формат входных данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Указанный пост не был найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  # Ручки связанные с комментариями
+  /api/v1/comment/create:
+    description: Оставляет комментарий к посту
+
+    post:
+      parameters:
+        - name: userID
+          in: cookie
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCommentRequest'
+        required: true
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Непредвиденная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Неправильный формат входных данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Указанный пост не был найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /api/v1/comments/getByPostIDs:
+    description: Получает комментарии к посту
+
+    post:
+      parameters:
+        - name: userID
+          in: cookie
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetCommentsByPostIDsRequest'
+        required: true
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCommentsByPostIDsResponse'
+        '500':
+          description: Непредвиденная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Неправильный формат входных данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Указанный пост не был найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /api/v1/comment/update:
+    description: Обновляет контент комментария
+
+    put:
+      parameters:
+        - name: userID
+          in: cookie
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCommentRequest'
+        required: true
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Непредвиденная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Неправильный формат входных данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Указанный комментарий не был найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '403':
+          description: У пользователя нет прав редактировать указанный комментарий
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /api/v1/comment/delete:
+    description: Удаляет комментарий
+
+    delete:
+      parameters:
+        - name: userID
+          in: cookie
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteCommentRequest'
+        required: true
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Непредвиденная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Неправильный формат входных данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Указанный комментарий не был найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '403':
+          description: У пользователя нет прав удалять текущий комментарий
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  # Ручки связанные с пользователями
+  /api/v1/user/getOwn:
+    description: Получает информацию о текущем авторизированном пользователе
+
+    get:
+      parameters:
+        - name: userID
+          in: cookie
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '500':
+          description: Непредвиденная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Неправильный формат входных данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /api/v1/user/getById:
+    description: Получает информацию о пользователе
+
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetUserById'
+        required: true
+
+      parameters:
+        - name: userID
+          in: cookie
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '500':
+          description: Непредвиденная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Неправильный формат входных данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Указанный пользователь не был найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /api/v1/user/subscribe:
+    description: Подписывает на пользователя
+
+    post:
+      parameters:
+        - name: userID
+          in: cookie
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscribeRequest'
+        required: true
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Непредвиденная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Неправильный формат входных данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Указанный пользователь не был найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /api/v1/user/unsubscribe:
+    description: Отписывает от пользователя
+
+    delete:
+      parameters:
+        - name: userID
+          in: cookie
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnsubscribeRequest'
+        required: true
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Непредвиденная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Неправильный формат входных данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Указанный пользователь не был найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  # Ручки связанные с локацией
+  /api/v1/locations/getPopular:
+    description: Получает список популярных локаций
+
+    post:
+      parameters:
+        - name: userID
+          in: cookie
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetPopularLocationsRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPopularLocationsResponse'
+        '500':
+          description: Непредвиденная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Неправильный формат входных данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  # Ручки связанные с лентой новостей
+  /api/v1/feed/getOwn:
+    description: Получает ленту новостей авторизованного пользователя, исходя из подписок
+
+    post:
+      parameters:
+        - name: userID
+          in: cookie
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetOwnFeedRequest'
+        required: true
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFeedResponse'
+        '500':
+          description: Непредвиденная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Неправильный формат входных данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /api/v1/feed/get:
+    description: Получает ленту новостей любого пользователя, исходя из его подписок
+
+    post:
+      parameters:
+        - name: userID
+          in: cookie
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetFeedRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFeedResponse'
+        '500':
+          description: Непредвиденная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Неправильный формат входных данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+components:
+  schemas:
+    # Модели связанные с постом
+    CreatePostRequest:
+      type: object
+      properties:
+        content:
+          type: string
+        attachments:
+          description: "Массив фотографий, не больше 10 элементов"
+          type: array
+        locationId:
+          type: integer
+
+    GetPostsByLocationIDsRequest:
+      type: object
+      properties:
+        locationIds:
+          type: array
+          items:
+            type: integer
+        fromPostId:
+          type: integer
+        limitPerRequest:
+          type: integer
+
+    GetPostsByLocationIDsResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/Post"
+
+    GetPostsByUserIDRequest:
+      type: object
+      properties:
+        userId:
+          type: integer
+        fromPostId:
+          type: integer
+        limitPerRequest:
+          type: integer
+
+    GetPostsByUserIDResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/Post"
+
+    Post:
+      type: object
+      properties:
+        authorId:
+          type: integer
+        content:
+          type: string
+        location:
+          $ref: "#/components/schemas/Location"
+        likesQuantity:
+          type: integer
+        commentsQuantity:
+          type: integer
+        createdAt:
+          type: integer
+        attachments:
+          type: array
+          items:
+            type: string
+
+    UpdatePostRequest:
+      type: object
+      properties:
+        content:
+          type: string
+        locationId:
+          type: integer
+
+    LikeRequest:
+      type: object
+      properties:
+        postId:
+          type: integer
+
+    UnlikeRequest:
+      type: object
+      properties:
+        postId:
+          type: integer
+
+    # Модели, связанные с комментариями
+    CreateCommentRequest:
+      type: object
+      properties:
+        postId:
+          type: integer
+        content:
+          type: string
+
+    GetCommentsByPostIDsRequest:
+      type: object
+      properties:
+        postId:
+          type: integer
+        fromCommentId:
+          type: integer
+        limitPerRequest:
+          type: integer
+
+    GetCommentsByPostIDsResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/GetCommentByPostIDs"
+
+    GetCommentByPostIDs:
+      type: object
+      properties:
+        commentId:
+          type: integer
+        authorId:
+          type: integer
+        content:
+          type: string
+        createdAt:
+          description: timestamp
+          type: integer
+
+    UpdateCommentRequest:
+      type: object
+      properties:
+        commentId:
+          type: integer
+        newContent:
+          type: string
+
+    DeleteCommentRequest:
+      type: object
+      properties:
+        commentId:
+          type: integer
+
+    # Модели, связанные с пользователем
+    GetUserById:
+      type: object
+      properties:
+        userId:
+          type: integer
+
+    SubscribeRequest:
+      type: object
+      properties:
+        userId:
+          type: integer
+
+    UnsubscribeRequest:
+      type: object
+      properties:
+        userId:
+          type: integer
+
+    User:
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        patronymic:
+          type: string
+        email:
+          type: string
+        pfpUrl:
+          type: string
+        posts:
+          type: array
+          items:
+            $ref: "#/components/schemas/Post"
+
+    # Модели, связанные с локацией
+    GetPopularLocationsRequest:
+      type: object
+      properties:
+        fromLocationId:
+          type: integer
+        limitPerRequest:
+          type: integer
+
+    GetPopularLocationsResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/PopularLocationResponse"
+
+    PopularLocationResponse:
+      type: object
+      properties:
+        locationId:
+          type: integer
+        name:
+          type: string
+        longitude:
+          type: number
+        latitude:
+          type: number
+        randomImages:
+          type: array
+          items:
+            type: string
+
+    Location:
+      type: object
+      properties:
+        name:
+          type: integer
+        longitude:
+          type: number
+        latitude:
+          type: number
+
+    # Модели, связанные с лентой
+    GetOwnFeedRequest:
+      type: object
+      properties:
+        fromPostId:
+          type: integer
+        limitPerRequest:
+          type: integer
+
+    GetFeedRequest:
+      type: object
+      properties:
+        userId:
+          type: integer
+        fromPostId:
+          type: integer
+        limitPerRequest:
+          type: integer
+
+    GetFeedResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/Post"
+
+    # Общие модели
+    ApiResponse:
+      type: object
+      properties:
+        message:
+          type: string
+
+    PostIDRequest:
+      type: object
+      properties:
+        postId:
+          type: integer
