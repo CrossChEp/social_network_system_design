@@ -596,7 +596,87 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  /api/v1/user/subscribe:
+  /api/v1/user/getFollowers:
+    description: Получает всех подписчиков пользователя
+
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetFollowersRequest'
+        required: true
+
+      parameters:
+        - name: userID
+          in: cookie
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFollowersResponse'
+        '500':
+          description: Непредвиденная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Неправильный формат входных данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /api/v1/user/getFollowees:
+    description: Получает всех пользователей, на которых подписан пользователь
+
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetFolloweesRequest'
+        required: true
+
+      parameters:
+        - name: userID
+          in: cookie
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFolloweesResponse'
+        '500':
+          description: Непредвиденная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Неправильный формат входных данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /api/v1/user/follow:
     description: Подписывает на пользователя
 
     post:
@@ -607,7 +687,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SubscribeRequest'
+              $ref: '#/components/schemas/FollowRequest'
         required: true
       responses:
         '200':
@@ -641,7 +721,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  /api/v1/user/unsubscribe:
+  /api/v1/user/unfollow:
     description: Отписывает от пользователя
 
     delete:
@@ -652,7 +732,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UnsubscribeRequest'
+              $ref: '#/components/schemas/UnfollowRequest'
         required: true
       responses:
         '200':
@@ -949,13 +1029,39 @@ components:
         userId:
           type: integer
 
-    SubscribeRequest:
+    GetFollowersRequest:
+      type: object
+      properties:
+        fromFollowerId:
+          type: integer
+        limitPerRequest:
+          type: integer
+
+    GetFollowersResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/User"
+
+    GetFolloweesRequest:
+      type: object
+      properties:
+        fromFollowerId:
+          type: integer
+        limitPerRequest:
+          type: integer
+
+    GetFolloweesResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/User"
+
+    FollowRequest:
       type: object
       properties:
         userId:
           type: integer
 
-    UnsubscribeRequest:
+    UnfollowRequest:
       type: object
       properties:
         userId:
@@ -964,6 +1070,8 @@ components:
     User:
       type: object
       properties:
+        userId:
+          type: number
         name:
           type: string
         surname:
