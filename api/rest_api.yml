@@ -782,11 +782,50 @@ paths:
         required: true
       responses:
         '200':
-          description: Successful operation
+          description: Успешная операция
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/GetPopularLocationsResponse'
+        '500':
+          description: Непредвиденная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Неправильный формат входных данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /api/v1/locations/search:
+    description: Получает список локаций по подтексту
+
+    post:
+      parameters:
+        - name: userID
+          in: cookie
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchLocationsRequest'
+        required: true
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchLocationResponse'
         '500':
           description: Непредвиденная ошибка
           content:
@@ -1116,6 +1155,21 @@ components:
           type: array
           items:
             type: string
+
+    SearchLocationsRequest:
+      type: object
+      properties:
+        searchRequest:
+          type: string
+        fromLocationId:
+          type: integer
+        limitPerRequest:
+          type: integer
+
+    SearchLocationResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/PopularLocationResponse"
 
     Location:
       type: object
