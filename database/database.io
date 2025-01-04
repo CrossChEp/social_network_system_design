@@ -3,11 +3,17 @@ Table users {
   name text
   surname text
   patronymic text [null]
+  pfp_url text
+  last_online_at timestamp
+}
+
+Table user_auth {
+  user_auth_id bigint [primary key]
+  user_id bigint
   email text
   password text
-  pfp_url text
+  is_active bool
   created_at timestamp
-  last_online_at timestamp
 }
 
 Table followers {
@@ -48,6 +54,8 @@ Table comments {
   author_id bigint
   created_at timestamp
 }
+
+Ref: user_auth.user_id > users.user_id
 
 Ref: followers.follower_id > users.user_id
 Ref: followers.followee_id > users.user_id
