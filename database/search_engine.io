@@ -1,7 +1,9 @@
-Table Locations {
+Table locations {
   location_id bigint [primary key]
   name text
-  langitude float
-  latitude float
+  longitude_min float
+  longitude_max float
+  latitude_min float
+  latitude_max float
   posts_quantity bigint
 }

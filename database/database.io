@@ -20,12 +20,8 @@ Table posts {
   content text
   author_id bigint
   location_id bigint
+  attachments json
   crated_at timestamp
-}
-
-Table attachments {
-  post_id bigint
-  object_url text
 }
 
 Table likes {
@@ -37,13 +33,16 @@ Table likes {
 Table locations {
   location_id bigint [primary key]
   name text
-  langitude float
-  latitude float
+  longitude_min float
+  longitude_max float
+  latitude_min float
+  latitude_max float
   posts_quantity bigint
 }
 
 Table comments {
   comment_id bigint [primary key]
+  repply_comment_id bigint
   content text
   post_id bigint
   author_id bigint
@@ -56,10 +55,9 @@ Ref: followers.followee_id > users.user_id
 Ref: posts.author_id > users.user_id
 Ref: posts.location_id > locations.location_id
 
-Ref: attachments.post_id > posts.post_id
-
 Ref: likes.post_id > posts.post_id
 Ref: likes.liker_id > users.user_id
 
 Ref: comments.post_id > posts.post_id
 Ref: comments.author_id > users.user_id
+Ref: comments.repply_comment_id > comments.comment_id
