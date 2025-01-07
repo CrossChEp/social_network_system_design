@@ -55,6 +55,11 @@ Table comments {
   created_at timestamp
 }
 
+Table feeds {
+  user_id bigint
+  posts json
+}
+
 Ref: user_auth.user_id > users.user_id
 
 Ref: followers.follower_id > users.user_id

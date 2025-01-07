@@ -1,0 +1,103 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "User")
+System(loadBalancer, "Load Balancer")
+System_Ext(CDN, "CDN")
+System(apiGw, "API Gateway")
+
+System(postComposition, "Post-composition", "Сервис для агрегации данных, связанных с постом. Ходит в разные сервисы и собирает полный ответ для клиента")
+System(userComposition, "User-composition", "Сервис для агрегации данных, связанных с пользователем. Ходит в разные сервисы и собирает полный ответ для клиента")
+
+System_Boundary(posts, "Posts") {
+    Container(postService, "Post-service", "Сервис для выполнения операций (CRUD) с сущностью поста")
+    Container(postDb, "Post DB", "PostgreSQL", "Хранит в себе сущность поста")
+}
+
+System_Boundary(comments, "Comments") {
+    Container(commentService, "Comment-service", "Сервис для выполнения операций (CRUD) с сущностью комментария")
+    Container(commentDb, "Comment DB", "PostgreSQL", "Хранит в себе сущность комментария")
+}
+
+System_Boundary(likes, "Likes") {
+    Container(likeService, "Like-service", "Сервис для выполнения операций (CRUD) с лайками")
+    Container(likeDb, "Like DB", "Redis", "Хранит в себе счетчики лайков и дизлайков")
+}
+
+System_Boundary(users, "Users") {
+    Container(userService, "User-service", "Сервис для выполнения операций (CRUD) с сущностью пользователя")
+    Container(userDb, "User DB", "PostgreSQL", "Хранит в себе сущность пользователя")
+}
+
+System_Boundary(follows, "Follows") {
+    Container(followService, "Follow-service", "Сервис для выполнения операций (CRUD) с сущностями подписок")
+    Container(followDb, "Follow DB", "Redis", "Хранит в себе информацию о подписках")
+}
+
+System_Boundary(locations, "Locations") {
+    Container(locationService, "Location-service", "Гео-сервис для операций, связанных с локациями")
+    Container(locationDb, "Location DB", "PostgreSQL", "Хранит в себе информацию о локациях")
+    Container(locationSearchEngine, "Location search engine", "Elastic-search/Sphinx", Хранит индекс для полнотекстовых запросов по названию локации" )
+    Container(locationCache, "Cache for popular locations", "Redis", "Кеш для списка популярных локаций. Инвалидруется раз в день")
+}
+
+System_Boundary(media, "Media") {
+    Container(mediaService, "Media-service", "Сервис для хранения медиафайлов. В основном фотографий пользователей и постов")
+    Container(mediaDb, "Object Storage", "S3/Ceph", "Объектное хранилище для хранения медиа файлов")
+}
+
+System_Boundary(feed, "Feed") {
+    Container(feedService, "Feed-service", "Сервис, отвечающий за работу новостной ленты")
+    Container(feedDB, "Feed DB", "Redis", "Хранилище ленты пользователей. Обновляется раз в день, ночью. Наполняется данными из сервиса аналитики")
+}
+
+System_Boundary(analytics, "Analytics") {
+    Container(analyticsService, "Analytics-service", "Сервис, отвечающий за аналитические операции")
+    Container(analyticsDb, "Analytics DB", "Clickhouse", "Хранит информацию об активности пользователя для составления ленты")
+}
+
+Rel(user, loadBalancer, "Uses", "HTTP")
+Rel(loadBalancer, CDN, "Uses for static content")
+Rel(loadBalancer, apiGw, "Routes API requests to services")
+
+Rel(apiGw, postComposition, "Uses", "RPC")
+Rel(apiGw, userComposition, "Uses", "RPC")
+Rel(apiGw, feedService, "Uses", "RPC")
+Rel(apiGw, locationService, "Uses", "RPC")
+Rel(apiGw, commentService, "Uses", "RPC")
+
+Rel(postComposition, postService, "Uses", "RPC")
+Rel(postComposition, commentService, "Uses", "RPC")
+Rel(postComposition, likeService, "Uses", "RPC")
+Rel(postComposition, locationService, "Uses", "RPC")
+Rel(postComposition, mediaService, "Uses", "HTTP")
+
+Rel(userComposition, userService, "Uses", "RPC")
+Rel(userComposition, postService, "Uses", "RPC")
+Rel(userComposition, followService, "Uses", "RPC")
+Rel(userComposition, locationService, "Uses", "RPC")
+Rel(userComposition, mediaService, "Uses", "HTTP")
+
+Rel(postService, postDb, "Uses")
+Rel(postService, analyticsService, "Uses", "RPC")
+
+Rel(commentService, commentDb, "Uses")
+
+Rel(likeService, likeDb, "Uses")
+Rel(likeService, analyticsService, "Uses", "RPC")
+
+Rel(userService, userDb, "Uses")
+
+Rel(followService, followDb, "Uses")
+
+Rel(locationService, locationDb, "Uses")
+Rel(locationService, locationSearchEngine, "Uses")
+Rel(locationService, locationCache, "Uses")
+
+Rel(feedService, feedDB, "Uses")
+
+Rel(analyticsService, analyticsDb, "Uses")
+Rel(analyticsDb, feedDB, "Uses once per day")
+
+Rel(mediaService, mediaDb, "Uses")
+@enduml
