@@ -5,7 +5,7 @@ info:
 paths:
 
   # Ручки связанные с постами
-  /api/v1/posts/create:
+  /api/v1/post/create:
     post:
       description: Создает пост
 
@@ -131,7 +131,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  /api/v1/posts/update:
+  /api/v1/post/update:
     description: Обновляет контент поста
 
     patch:
@@ -182,8 +182,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  /api/v1/posts/delete:
-    description: Удаляет пост пользователя, используя ID поста
+  /api/v1/post/delete:
+    description: Удаляет пост
 
     delete:
       parameters:
@@ -233,8 +233,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  /api/v1/posts/like:
-    description: Ставит лайк на пост, используя ID поста
+  /api/v1/post/like:
+    description: Ставит лайк на пост
 
     patch:
       parameters:
@@ -278,8 +278,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  /api/v1/posts/unlike:
-    description: Убирает лайк с поста, используя ID поста
+  /api/v1/post/unlike:
+    description: Убирает лайк с поста
 
     patch:
       parameters:
@@ -324,7 +324,7 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
 
   # Ручки связанные с комментариями
-  /api/v1/comments/create:
+  /api/v1/comment/create:
     description: Оставляет комментарий к посту
 
     post:
@@ -414,7 +414,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  /api/v1/comments/update:
+  /api/v1/comment/update:
     description: Обновляет контент комментария
 
     put:
@@ -465,7 +465,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  /api/v1/comments/delete:
+  /api/v1/comment/delete:
     description: Удаляет комментарий
 
     delete:
@@ -517,7 +517,7 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
 
   # Ручки связанные с пользователями
-  /api/v1/users/getOwn:
+  /api/v1/user/getOwn:
     description: Получает информацию о текущем авторизированном пользователе
 
     get:
@@ -550,7 +550,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  /api/v1/users/getById:
+  /api/v1/user/getById:
     description: Получает информацию о пользователе
 
     post:
@@ -596,7 +596,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  /api/v1/users/getFollowers:
+  /api/v1/user/getFollowers:
     description: Получает всех подписчиков пользователя
 
     post:
@@ -636,7 +636,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  /api/v1/users/getFollowees:
+  /api/v1/user/getFollowees:
     description: Получает всех пользователей, на которых подписан пользователь
 
     post:
@@ -676,7 +676,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  /api/v1/users/follow:
+  /api/v1/user/follow:
     description: Подписывает на пользователя
 
     post:
@@ -721,7 +721,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  /api/v1/users/unfollow:
+  /api/v1/user/unfollow:
     description: Отписывает от пользователя
 
     delete:
@@ -845,7 +845,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  # Ручки связанные с лентой новостей пользователей, на которых пользователь подписан
+  # Ручки связанные с лентой новостей
   /api/v1/feed/getOwn:
     description: Получает ленту новостей авторизованного пользователя, исходя из подписок
 
