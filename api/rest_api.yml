@@ -5,7 +5,7 @@ info:
 paths:
 
   # Ручки связанные с постами
-  /api/v1/posts/create:
+  /api/v1/posts:
     post:
       description: Создает пост
 
@@ -45,8 +45,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  /api/v1/posts/getByLocationIDs:
-    description: Получает список постов по списку id локаций
+  /api/v1/posts/query:
+    description: Получает список постов на основе переданных userIDs и locationIDs
 
     post:
       parameters:
@@ -57,7 +57,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GetPostsByLocationIDsRequest'
+              $ref: '#/components/schemas/GetPostsRequest'
         required: true
       responses:
         '200':
@@ -65,7 +65,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetPostsByLocationIDsResponse'
+                $ref: '#/components/schemas/GetPostsResponse'
         '500':
           description: Непредвиденная ошибка
           content:
@@ -85,59 +85,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  /api/v1/posts/getByUserID:
-    description: Получает посты по userID
-
-    post:
-      parameters:
-        - name: userID
-          in: cookie
-
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/GetPostsByUserIDRequest'
-        required: true
-      responses:
-        '200':
-          description: Успешная операция
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetPostsByUserIDResponse'
-        '500':
-          description: Непредвиденная ошибка
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiResponse'
-        '401':
-          description: Пользователь не авторизован
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiResponse'
-        '400':
-          description: Неправильный формат входных данных
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiResponse'
-        '404':
-          description: Указанный пользователь не был найден
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiResponse'
-
-  /api/v1/posts/update:
+  /api/v1/posts/${postId}:
     description: Обновляет контент поста
-
     patch:
       parameters:
         - name: userID
           in: cookie
+        - name: postId
+          in: path
+
       requestBody:
         content:
           application/json:
@@ -182,19 +138,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  /api/v1/posts/delete:
+  /api/v1/posts/{$postId}:
     description: Удаляет пост пользователя, используя ID поста
 
     delete:
       parameters:
         - name: userID
           in: cookie
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PostIDRequest'
-        required: true
+        - name: postId
+          in: path
+
       responses:
         '200':
           description: Успешная операция
@@ -233,19 +186,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  /api/v1/posts/like:
+  /api/v1/posts/like/{$postId}:
     description: Ставит лайк на пост, используя ID поста
 
     patch:
       parameters:
         - name: userID
           in: cookie
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/LikeRequest'
-        required: true
+        - name: postId
+          in: path
+
       responses:
         '200':
           description: Успешная операция
@@ -278,19 +228,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  /api/v1/posts/unlike:
+  /api/v1/posts/unlike/{$postId}:
     description: Убирает лайк с поста, используя ID поста
 
     patch:
       parameters:
         - name: userID
           in: cookie
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UnlikeRequest'
-        required: true
+        - name: postId
+          in: path
+
       responses:
         '200':
           description: Успешная операция
@@ -324,7 +271,7 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
 
   # Ручки связанные с комментариями
-  /api/v1/comments/create:
+  /api/v1/comments/${postId}:
     description: Оставляет комментарий к посту
 
     post:
@@ -369,8 +316,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  /api/v1/comments/getByPostIDs:
-    description: Получает комментарии к посту
+  /api/v1/comments:
+    description: Получает комментарии к посту, используя список id постов
 
     post:
       parameters:
@@ -414,13 +361,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  /api/v1/comments/update:
+  /api/v1/comments/{$commentId}:
     description: Обновляет контент комментария
 
     put:
       parameters:
         - name: userID
           in: cookie
+        - name: commentId
+          in: path
+
       requestBody:
         content:
           application/json:
@@ -465,19 +415,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  /api/v1/comments/delete:
+  /api/v1/comments/${commentId}:
     description: Удаляет комментарий
 
     delete:
       parameters:
         - name: userID
           in: cookie
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DeleteCommentRequest'
-        required: true
+        - name: commentId
+          in: path
+
       responses:
         '200':
           description: Успешная операция
@@ -517,7 +464,7 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
 
   # Ручки связанные с пользователями
-  /api/v1/users/getOwn:
+  /api/v1/users/own:
     description: Получает информацию о текущем авторизированном пользователе
 
     get:
@@ -550,20 +497,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  /api/v1/users/getById:
+  /api/v1/users/{$userId}:
     description: Получает информацию о пользователе
 
     post:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/GetUserById'
-        required: true
-
       parameters:
         - name: userID
           in: cookie
+        - name: userId
+          in: path
+
       responses:
         '200':
           description: Успешная операция
@@ -596,8 +539,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  /api/v1/users/getFollowers:
-    description: Получает всех подписчиков пользователя
+  /api/v1/users/followers:
+    description: Получает всех подписчиков авторизованного пользователя
 
     post:
       requestBody:
@@ -610,6 +553,7 @@ paths:
       parameters:
         - name: userID
           in: cookie
+
       responses:
         '200':
           description: Успешная операция
@@ -636,8 +580,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  /api/v1/users/getFollowees:
-    description: Получает всех пользователей, на которых подписан пользователь
+  /api/v1/users/followees:
+    description: Получает всех пользователей, на которых авторизованный пользовать подписан
 
     post:
       requestBody:
@@ -676,19 +620,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  /api/v1/users/follow:
+  /api/v1/users/follow/${userId}:
     description: Подписывает на пользователя
 
     post:
       parameters:
         - name: userID
           in: cookie
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FollowRequest'
-        required: true
+        - name: userId
+          in: path
+
       responses:
         '200':
           description: Успешная операция
@@ -721,19 +662,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  /api/v1/users/unfollow:
+  /api/v1/users/unfollow/${userId}:
     description: Отписывает от пользователя
 
     delete:
       parameters:
         - name: userID
           in: cookie
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UnfollowRequest'
-        required: true
+        - name: userId
+          in: path
       responses:
         '200':
           description: Успешная операция
@@ -767,7 +704,7 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
 
   # Ручки связанные с локацией
-  /api/v1/locations/getPopular:
+  /api/v1/locations/popular:
     description: Получает список популярных локаций
 
     post:
@@ -846,7 +783,7 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
 
   # Ручки связанные с лентой новостей пользователей, на которых пользователь подписан
-  /api/v1/feed/getOwn:
+  /api/v1/feed/own:
     description: Получает ленту новостей авторизованного пользователя, исходя из подписок
 
     post:
@@ -885,13 +822,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
 
-  /api/v1/feed/get:
+  /api/v1/feed/${userId}:
     description: Получает ленту новостей любого пользователя, исходя из его подписок
 
     post:
       parameters:
         - name: userID
           in: cookie
+        - name: userId
+          in: path
       requestBody:
         content:
           application/json:
@@ -938,10 +877,14 @@ components:
         locationId:
           type: integer
 
-    GetPostsByLocationIDsRequest:
+    GetPostsRequest:
       type: object
       properties:
         locationIds:
+          type: array
+          items:
+            type: integer
+        userIds:
           type: array
           items:
             type: integer
@@ -950,22 +893,7 @@ components:
         limitPerRequest:
           type: integer
 
-    GetPostsByLocationIDsResponse:
-      type: array
-      items:
-        $ref: "#/components/schemas/Post"
-
-    GetPostsByUserIDRequest:
-      type: object
-      properties:
-        userId:
-          type: integer
-        fromPostId:
-          type: integer
-        limitPerRequest:
-          type: integer
-
-    GetPostsByUserIDResponse:
+    GetPostsResponse:
       type: array
       items:
         $ref: "#/components/schemas/Post"
@@ -998,24 +926,10 @@ components:
         locationId:
           type: integer
 
-    LikeRequest:
-      type: object
-      properties:
-        postId:
-          type: integer
-
-    UnlikeRequest:
-      type: object
-      properties:
-        postId:
-          type: integer
-
     # Модели, связанные с комментариями
     CreateCommentRequest:
       type: object
       properties:
-        postId:
-          type: integer
         content:
           type: string
 
@@ -1050,24 +964,10 @@ components:
     UpdateCommentRequest:
       type: object
       properties:
-        commentId:
-          type: integer
         newContent:
           type: string
 
-    DeleteCommentRequest:
-      type: object
-      properties:
-        commentId:
-          type: integer
-
     # Модели, связанные с пользователем
-    GetUserById:
-      type: object
-      properties:
-        userId:
-          type: integer
-
     GetFollowersRequest:
       type: object
       properties:
@@ -1093,18 +993,6 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/User"
-
-    FollowRequest:
-      type: object
-      properties:
-        userId:
-          type: integer
-
-    UnfollowRequest:
-      type: object
-      properties:
-        userId:
-          type: integer
 
     User:
       type: object
@@ -1193,8 +1081,6 @@ components:
     GetFeedRequest:
       type: object
       properties:
-        userId:
-          type: integer
         fromPostId:
           type: integer
         limitPerRequest:
